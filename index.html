@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="resources/images/siteicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="resources/css/styles.css">
+    <title>Catch the Goobbue!</title>
+  </head>
+  <body>
+    <section class="start-screen screen" id="start-screen">
+      <h1>Catch the Goobbue!</h1>
+      <p class="synopsis">Help a farmer get his farm back from the adorable invading army of goobbues!</p>
+      <form class="difficulty-container">
+        <div class="input-containers">
+          <span class="difficulty easy" id="easy">Easy</span>
+          <span class="difficulty normal" id="normal">Normal</span>
+          <span class="difficulty hard" id="hard">Hard</span>
+        </div>
+      </form>
+      <button id="startBtn" class="startBtn btn" type="button">Start Game</button>
+      <img class="goob-runner runner1" src="resources/images/goobrun.png" draggable="false">
+      <img class="goob-runner runner2" src="resources/images/goobrun.png" draggable="false">
+    </section>
+    <section class="game-screen screen" id="game-screen">
+      <div class="audio-controls">
+        <button id="pauseBtn" class="musicBtn"><i class="fas fa-pause"></i></button>
+        <button id="playBtn" class="musicBtn"><i class="fas fa-play"></i></button>
+      </div>
+      <h3 id="time" class="time">Time: 00:00</h3>
+      <h3 id="score" class="score">Goobbue Caught: 0</h3>
+      <div class="message-container" id="message-container">
+        <h5 id="message" class="message">Longer Message here as an example of what it looks like so that I can tell</h5>
+      </div> 
+
+      <button id="reload" class="btn reload-btn">Reload Game</button>
+
+      <!-- Container where all goobbue elements will spawn -->
+      <div class="goobbue-container" id="goobbue-container"></div>
+      <div class="boss-container" id="boss-container" draggable="false">
+        <div class="boss-top-container" id="boss-top-container">
+          <img src="resources/images/goobBoss.png" class="goob-boss" id="goob-boss" draggable="false">
+        </div>
+        <div class="boss-hp-container" id="boss-hp-container">
+          <h3>Goobbue Lord (Extreme): <span class="hp" id="hp" style="color: red">500</span></h3>
+          <div class="boss-bar">
+            <div class="boss-bar-line" id="hp-line"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="resources/script/script.js"></script>
+  </body>
+</html>
