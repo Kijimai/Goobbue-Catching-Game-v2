@@ -123,18 +123,30 @@ body {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
+.copyright {
+  position: absolute;
+  bottom: 5vh;
+  left: 5vh;
+  user-select: none;
+  pointer-events: none;
+}
+
+
+/* Game Screen Section */
+
 .game-screen {
   position: relative;
   background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url('../images/farmBG.png');
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
 }
 
 .audio-controls {
   position: absolute;
   z-index: 100;
-  left: 50px;
-  top: 50px;
+  left: 3vw;
+  top: 10vh;
 }
 
 .musicBtn {
@@ -145,6 +157,12 @@ body {
 
 .musicBtn:hover {
   background-color: orange;
+}
+
+.audioCtrlsTxt {
+  color: #f8f8f8;
+  user-select: none;
+  pointer-events: none;
 }
 
 .input-label,
@@ -159,15 +177,17 @@ body {
 
 .time, .score {
   position: absolute;
-  top: 20px;
+  top: 5vh;
 }
 
 .time {
-  left: 20px;
+  left: 3vw;
+  font-size: 26px;
 }
 
 .score {
-  right: 20px;
+  right: 4vw;
+  font-size: 26px;
 }
 
 .reload-btn {
@@ -196,18 +216,57 @@ body {
 /* Message CSS */
 
 .message-container {
-  background-color: grey;
+  position: absolute;
+  bottom: 10px;
+  left: 20vw;
+  z-index: 100;
+  background-color: rgb(240, 240, 240);
+  color: rgb(43, 84, 219);
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  height: 150px;
+  width: 350px;
   padding: 10px 20px;
+  border-radius: 10px;
   user-select: none;
   pointer-events: none;
+  font-family: 'Nanum Pen Script', sans-serif;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s linear;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
+}
+
+.message-container::after {
+  content: '';
+  position: absolute;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid rgba(240, 240, 240, 1);;
+  transform: rotate(-90deg);
+  left: -22px; 
+  top: 50px;
+  z-index: 100;
+}
+
+.message-container.active {
+  opacity: 1;
+}
+
+.farmerImg {
+  height: 150px;
+  position: absolute;
+  top: 0;
+  left: -170px;
+  z-index: 100;
+  background-color: rgba(71, 176, 233, 0.5);
+  border-radius: 15px;
 }
 
 .message {
-  font-size: 26px;
+  font-size: 30px;
 }
 
 /* Goobbue related CSS */
@@ -215,7 +274,7 @@ body {
 .goobbue-container {
   position: absolute;
   bottom: 10px;
-  height: 80vh;
+  height: 70vh;
   width: 100%;
 }
 

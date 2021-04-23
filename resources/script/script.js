@@ -23,10 +23,12 @@ const reloadBtn = document.getElementById('reload')
 //Global Variables
 let goobbueCount = document.querySelectorAll('.goobbue').length
 let difficultyChosen = ''
-let score = 98
+let score = 240
 let seconds = 0
 let clearTime = 0
 let spawnSpeed = 0
+let message = ''
+let bossHP = 500
 const easyMaxScore = 100
 const normalMaxScore = 250
 const hardMaxScore = 500
@@ -138,11 +140,11 @@ function increaseScore() {
 }
 
 function scoreCheck() {
-  generateMessage()
   if(bossSpawned) {
     maxScoreReached = true
     return
   }
+  generateMessage()
   if(difficultyChosen === 'Easy') {
     if(score === easyMaxScore) {
       removeAllSproutlings()
@@ -262,17 +264,76 @@ function catchGoobbue() {
 }
 
 function generateMessage() {
-  let message = ''
   if(difficultyChosen === 'Easy') {
-    if(score === 15) {
-      message = `Look out! There's more of them coming!`
+    if (score === easyMaxScore) {
+      message = `Farmer: ... Do you hear that rumbling? Look out! It's a giant Goobbue!` 
       messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 10000)
+    } else if (score === 50) {
+      message = `Farmer: Wow! You've almost got them all!`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
+    } else if(score === 15) {
+      message = `Farmer: Don't stop now, there's more of them coming!`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
     }
   } else if (difficultyChosen === 'Normal') {
-    if (score === 15) {
-      message = `There's no slowing them down! Look out!`
+    if (score === normalMaxScore) {
+      message = `Farmer: ... Do you hear that rumbling? Oh no, Look out! It's a giant Goobbue! (normal)` 
       messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 10000)
+    } else if (score === 100) {
+      message = `Farmer: What was that noise? I hope it was nothing...`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
+    } else if(score === 25) {
+      message = `Farmer: Don't stop now, there's more of them coming! (normal)`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
     }
+  } else if (difficultyChosen === 'Hard') {
+    if (score === hardMaxScore) {
+      message = `Farmer: ... Do you hear that rumbling? Oh no, look out! It's a giant Goobbue! (hard)` 
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 10000)
+    } else if (score === 400) {
+      message = `Farmer: You've got them on the ropes!` 
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 10000)
+    } else if (score === 250) {
+      message = `Farmer: What was that noise? I hope it was nothing...(hard)`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
+    } else if(score === 50) {
+      message = `Farmer: Don't stop now, there's more of them coming! (hard)`
+      messageText.textContent = message
+      messageContainer.classList.add('active')
+      setTimeout( () => messageContainer.classList.remove('active'), 5000)
+    }
+  }
+}
+
+function generateBossMessage() {
+  if (bossHP <= 250 && bossHP > 245) {
+    message = `Farmer: Incredible! Such power can only come from the warrior of light! Could you be...?`
+    messageText.textContent = message
+    messageContainer.classList.add('active')
+    setTimeout( () => messageContainer.classList.remove('active'), 10000)
+    return
+  } else if (bossDefeated) {
+    message = `Farmer: You've saved my farm! Thank you!`
+    messageText.textContent = message
+    messageContainer.classList.add('active')
   }
 }
 
@@ -305,8 +366,6 @@ function spawnBoss() {
   setTimeout(bossTheme, 2000)
 }
 
-let bossHP = 500
-
 innerBossContainer.addEventListener('click', (e) => {
   //Stop listening to click events once the boss is defeated
   if(bossDefeated) {
@@ -326,7 +385,11 @@ function adjustBossHP(e) {
     bossDefeated = true
     bossHP = 0
     pauseAllMusic()
+    generateBossMessage()
     victoryMessage()
+  } 
+  if (bossHP <= 250 && bossHP > 240) {
+    generateBossMessage()
   }
   damageIndication(e)
   goobHP.textContent = `${bossHP}`
@@ -365,15 +428,24 @@ function damageIndication(e) {
 
 //keeps track and logs the amount of goobbue elements on the html
 function logCurrentGoobueCount() {
+  goobbueCount = document.querySelectorAll('.goobbue').length
   if(maxScoreReached) {
     return
   }
-  goobbueCount = document.querySelectorAll('.goobbue').length
   console.log(goobbueCount) 
 }
 
 //Runs this message when bossDefeated is true
 function victoryMessage() {
+  document.querySelector('#themePlay').remove()
+  const victoryTheme = document.createElement('audio')
+  victoryTheme.id = 'themePlay'
+  victoryTheme.src = 'resources/sounds/VictoryKazoo.mp3'
+  victoryTheme.type = 'audio/mpeg'
+  victoryTheme.volume = 0.05
+  setTimeout(() => victoryTheme.play(), 1500)
+  victoryTheme.loop = true
+  gameContainer.appendChild(victoryTheme)
   let m = Math.floor(seconds / 60)
   let s = seconds % 60
   m = m < 10 ? `0${m}` : m 
