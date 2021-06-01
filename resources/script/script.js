@@ -14,7 +14,14 @@ const goobbueBoss = document.getElementById('goob-boss')
 const innerBossContainer = document.getElementById('boss-top-container')
 const bossHPContainer = document.getElementById('boss-hp-container')
 const goobHP = document.getElementById('hp')
+const diffInfoContainer = document.getElementById('diff-info-container')
+const easyInfo = document.getElementById('easy-info')
+const normalInfo = document.getElementById('normal-info')
+const hardInfo = document.getElementById('hard-info')
 const goobHPLine = document.getElementById('hp-line')
+const victoryMsgContainer = document.getElementById('victory-msg-container')
+const victoryMsg = document.getElementById('victory-msg')
+const clearTimeMsg = document.getElementById('clearTime')
 const scoreEl = document.getElementById('score')
 const timeEl = document.getElementById('time')
 const startBtn = document.getElementById('startBtn')
@@ -23,7 +30,7 @@ const reloadBtn = document.getElementById('reload')
 //Global Variables
 let goobbueCount = document.querySelectorAll('.goobbue').length
 let difficultyChosen = ''
-let score = 240
+let score = 90
 let seconds = 0
 let clearTime = 0
 let spawnSpeed = 0
@@ -59,6 +66,12 @@ function stopTheme() {
   themePlay.pause()
 }
 
+function playRoar() {
+  const roar = new Audio('/resources/sounds/Roars.wav')
+  roar.volume = 0.1
+  roar.play()
+}
+
 function bossTheme() {
   // const bossTheme = new Audio('/resources/sounds/StormbloodKazoo.mp3')
   // bossTheme.volume = 0.2
@@ -89,35 +102,45 @@ pauseBtn.addEventListener('click', pauseAllMusic)
 playBtn.addEventListener('click', playAllMusic)
 
 //keeps track of the current goobbue count on the page every second
-setInterval(logCurrentGoobueCount, 1000)
+
 
 // Reload the page
 reloadBtn.addEventListener('click', reloadPage)
 
 //add colors to difficulty buttons and also store the difficulty chosen for global access
 difficultyContainer.addEventListener('click', (e) => {
+  diffInfoContainer.classList.add('active')
   difficultyChosen = e.target.textContent
   const allDiffBtns = document.querySelectorAll('.difficulty')
+  const allDiffInfo = document.querySelectorAll('.diff-info')
   allDiffBtns.forEach(btn => btn.classList.remove('active'))
+  allDiffInfo.forEach(info => info.classList.remove('show'))
   if(difficultyChosen === 'Easy') {
     easyBtn.classList.toggle('active')
+    easyInfo.classList.add('show')
   } else if(difficultyChosen === 'Normal') {
     normalBtn.classList.toggle('active')
-  } else if(difficultyChosen === 'Hard')
+    normalInfo.classList.add('show')
+  } else if(difficultyChosen === 'Hard') {
     hardBtn.classList.toggle('active')
+    hardInfo.classList.add('show')
+  } else {
+    diffInfoContainer.classList.remove('active')
+  }
 }) 
 
 startBtn.addEventListener('click', () => {
+  diffInfoContainer.classList.remove('active')
   if(difficultyChosen === 'Easy') {
-    difficultyChosen = 'Easy'
+    // difficultyChosen = 'Easy'
     startEasyGame()
     setTimeout(() => playTheme(), 2000)
   } else if (difficultyChosen === 'Normal') {
-    difficultyChosen = 'Normal'
+    // difficultyChosen = 'Normal'
     startNormalGame()
     setTimeout(() => playTheme(), 2000)
   } else if (difficultyChosen === 'Hard') {
-    difficultyChosen = 'Hard'
+    // difficultyChosen = 'Hard'
     startHardGame()
     setTimeout(() => playTheme(), 2000)
   } else {
@@ -125,6 +148,7 @@ startBtn.addEventListener('click', () => {
     return
   }
   startGameSound()
+  setInterval(logCurrentGoobueCount, 1000)
   startContainer.classList.add('moveUp')
   setTimeout(function() {
     startContainer.remove()
@@ -139,36 +163,47 @@ function increaseScore() {
   scoreEl.innerHTML = `Goobbue Caught: ${score}`
 }
 
+function increaseScoreGold() {
+  if(difficultyChosen === 'Normal') {
+    score+=5 
+  } else if (difficultyChosen === 'Hard') {
+    score+=25
+  }
+  scoreCheck()
+  scoreEl.innerHTML = `Goobbue Caught: ${score}`
+}
+
 function scoreCheck() {
-  if(bossSpawned) {
-    maxScoreReached = true
+  if(maxScoreReached) {
     return
   }
   generateMessage()
   if(difficultyChosen === 'Easy') {
-    if(score === easyMaxScore) {
+    if(score >= easyMaxScore) {
       removeAllSproutlings()
       setTimeout(removeAllSproutlings, 1000) //ensures removal of all remaining goobs
       stopTheme()
-      spawnBoss()
-      bossSpawned = true
+      maxScoreReached = true
+      victoryMessage()
       return
     }
   } else if(difficultyChosen === 'Normal') {
-    if(score === normalMaxScore) {
+    if(score >= normalMaxScore) {
       removeAllSproutlings()
       setTimeout(removeAllSproutlings, 1000)
       stopTheme()
       spawnBoss()
+      maxScoreReached = true
       bossSpawned = true
       return
     }
   } else if (difficultyChosen === 'Hard') {
-    if(score === hardMaxScore) {
+    if(score >= hardMaxScore) {
       removeAllSproutlings()
       setTimeout(removeAllSproutlings, 1000)
       stopTheme()
       spawnBoss()
+      maxScoreReached = true
       bossSpawned = true
       return
     }
@@ -181,7 +216,7 @@ function startEasyGame() {
     reloadBtn.classList.toggle('active')
   }, 3000)
   setInterval(generateGoobbue, 1000)
-  setInterval(scoreCheck, 300)
+  setInterval(scoreCheck, 1000)
   setInterval(increaseTime, 1000)
   console.log('easy')
 }
@@ -192,6 +227,7 @@ function startNormalGame() {
     reloadBtn.classList.toggle('active')
   }, 3000)
   setInterval(generateGoobbue, 500)
+  setInterval(generateGoldenGoobbue, 5000)
   setInterval(scoreCheck, 300)
   setTimeout(() => setInterval(targetAndRemove, 3000), 2000)
   setInterval(increaseTime, 1000)
@@ -206,6 +242,7 @@ function startHardGame() {
   setInterval(generateGoobbue, 500)
   setInterval(generateGoobbue, 1750)
   setInterval(scoreCheck, 300)
+  setInterval(generateGoldenGoobbue, 10000)
   setTimeout(() => setInterval(targetAndRemove, 2000), 2000)
   setTimeout(() => setInterval(targetAndRemove, 2000), 2000)
   setInterval(increaseTime, 1000)
@@ -246,6 +283,27 @@ function generateGoobbue() {
   goobbueContainer.appendChild(goobbue)
 }
 
+function generateGoldenGoobbue() {
+  if (maxScoreReached) {
+    return
+  }
+  let randomY = Math.floor(Math.random() * 350) 
+  const goldenGoobbue = document.createElement('div')
+  goldenGoobbue.classList.add('golden')
+  goldenGoobbue.style.top = `${randomY}px`
+  goldenGoobbue.innerHTML = `<img src="resources/images/GoldenGoobbue.png" alt="gold goobbue" draggable="false">`
+  
+  goldenGoobbue.addEventListener('click', catchGoldGoobbue)
+  goldenGoobbue.addEventListener('drag', catchGoldGoobbue)
+  goobbueContainer.appendChild(goldenGoobbue)
+  setTimeout( () => {
+    goldenGoobbue.classList.add('show')
+  }, 500)
+  setTimeout( () => {
+    goldenGoobbue.remove()
+  }, 8000)
+}
+
 //function returns a randomized X and Y coordinate to style the goobbue image
 function getRandomLocation() {
 
@@ -263,10 +321,19 @@ function catchGoobbue() {
   setTimeout(() => this.remove(), 2000)
 }
 
+function catchGoldGoobbue() {
+  const catchSound = new Audio('/resources/sounds/CatchGoldSound.wav')
+  catchSound.volume = 0.1
+  catchSound.play()
+  increaseScoreGold()
+  // this.classList.add('caught') //window object golden goobbue
+  this.remove()
+}
+
 function generateMessage() {
   if(difficultyChosen === 'Easy') {
-    if (score === easyMaxScore) {
-      message = `Farmer: ... Do you hear that rumbling? Look out! It's a giant Goobbue!` 
+    if (score >= easyMaxScore) {
+      message = `Farmer: Thank you for saving my farm!` 
       messageText.textContent = message
       messageContainer.classList.add('active')
       setTimeout( () => messageContainer.classList.remove('active'), 10000)
@@ -282,12 +349,13 @@ function generateMessage() {
       setTimeout( () => messageContainer.classList.remove('active'), 5000)
     }
   } else if (difficultyChosen === 'Normal') {
-    if (score === normalMaxScore) {
+    if (score >= normalMaxScore) {
       message = `Farmer: ... Do you hear that rumbling? Oh no, Look out! It's a giant Goobbue! (normal)` 
       messageText.textContent = message
       messageContainer.classList.add('active')
       setTimeout( () => messageContainer.classList.remove('active'), 10000)
     } else if (score === 100) {
+      playRoar()
       message = `Farmer: What was that noise? I hope it was nothing...`
       messageText.textContent = message
       messageContainer.classList.add('active')
@@ -299,7 +367,7 @@ function generateMessage() {
       setTimeout( () => messageContainer.classList.remove('active'), 5000)
     }
   } else if (difficultyChosen === 'Hard') {
-    if (score === hardMaxScore) {
+    if (score >= hardMaxScore) {
       message = `Farmer: ... Do you hear that rumbling? Oh no, look out! It's a giant Goobbue! (hard)` 
       messageText.textContent = message
       messageContainer.classList.add('active')
@@ -310,6 +378,7 @@ function generateMessage() {
       messageContainer.classList.add('active')
       setTimeout( () => messageContainer.classList.remove('active'), 10000)
     } else if (score === 250) {
+      playRoar()
       message = `Farmer: What was that noise? I hope it was nothing...(hard)`
       messageText.textContent = message
       messageContainer.classList.add('active')
@@ -440,16 +509,32 @@ function victoryMessage() {
   document.querySelector('#themePlay').remove()
   const victoryTheme = document.createElement('audio')
   victoryTheme.id = 'themePlay'
-  victoryTheme.src = 'resources/sounds/VictoryKazoo.mp3'
+  victoryTheme.src = 'resources/sounds/victoryTheme.mp3'
   victoryTheme.type = 'audio/mpeg'
-  victoryTheme.volume = 0.05
+  victoryTheme.volume = 0.2
   setTimeout(() => victoryTheme.play(), 1500)
-  victoryTheme.loop = true
+  setTimeout( () => victoryTheme.play(), 1000)
   gameContainer.appendChild(victoryTheme)
+
+  innerBossContainer.classList.add('disappear')
+  setTimeout(() => {
+    innerBossContainer.remove()
+    bossContainer.remove()
+  }, 1500)
+
   let m = Math.floor(seconds / 60)
   let s = seconds % 60
   m = m < 10 ? `0${m}` : m 
   s = s < 10 ? `0${s}` : s 
-  const clearMessage = `Your clear time is ${m}:${s}!`
-  console.log(clearMessage)
+  setTimeout(() => {
+    victoryMsgContainer.classList.add('active')
+    setTimeout( () => {
+      victoryMsgContainer.classList.add('show')
+    }, 1000)
+  }, 1500)
+  const clearTime = `<h3>Your clear time is ${m}:${s}!</h3>`
+  clearTimeMsg.innerHTML = `${clearTime}`
+  const finalReloadBtn = document.getElementById('reloadGame')
+  reloadBtn.remove()
+  finalReloadBtn.addEventListener('click', reloadPage)
 }

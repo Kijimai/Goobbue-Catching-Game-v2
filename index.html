@@ -14,18 +14,46 @@
   </head>
   <body>
     <section class="start-screen screen" id="start-screen">
+
       <h1>Catch the Goobbue!</h1>
-      <p class="synopsis">Help a farmer get his farm back from the adorable invading army of goobbues!</p>
-      <form class="difficulty-container">
-        <div class="input-containers">
+      <p class="synopsis">Help a farmer get their farm back from the adorable invading army of goobbues!</p>
+      <div class="difficulty-container">
+        <img class="goob-runner" src="resources/images/runanimpng.gif" draggable="false">
+        <div class="inputs-container">
           <span class="difficulty easy" id="easy">Easy</span>
           <span class="difficulty normal" id="normal">Normal</span>
           <span class="difficulty hard" id="hard">Hard</span>
         </div>
-      </form>
+      </div>
+      <div class="diff-info-container" id="diff-info-container">
+        <div class="hard-info diff-info" id="hard-info">
+          <ul>
+            <li>Goobbue spawn rates are faster</li>
+            <li>Gold Goobbues that spawn are worth 25pts</li>
+            <li>Score to win is 500</li>
+            <li>Boss will spawn</li>
+          </ul>
+        </div>
+
+        <div class="normal-info diff-info" id="normal-info">
+          <ul>
+            <li>Goobbue spawn rates are faster</li>
+            <li>Gold Goobbues that spawn are worth 5pts</li>
+            <li>Score to win is 250</li>
+            <li>Boss will spawn</li>
+          </ul>
+        </div>
+
+        <div class="easy-info diff-info" id="easy-info">
+          <ul>
+            <li>Goobbue spawn rates are normal</li>
+            <li>Score to win is 100</li>
+            <li>No Boss</li>
+          </ul>
+        </div>
+
+      </div>
       <button id="startBtn" class="startBtn btn" type="button">Start Game</button>
-      <img class="goob-runner runner1" src="resources/images/goobrun.png" draggable="false">
-      <img class="goob-runner runner2" src="resources/images/goobrun.png" draggable="false">
       <small id="copyright" class="copyright">I do not own the characters or the audio.<br>
         FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.<br>
         FINAL FANTASY XIV © 2010-2021 SQUARE ENIX CO., LTD. All Rights Reserved.</small>
@@ -38,6 +66,9 @@
       </div>
       <h3 id="time" class="time">Time: 00:00</h3>
       <h3 id="score" class="score">Goobbue Caught: 0</h3>
+      <div class="victory-msg-container">
+
+      </div>
       <div class="message-container" id="message-container">
         <img class="farmerImg" src="resources/images/farmerCheer.png">
         <h5 id="message" class="message">Longer Message here as an example of what it looks like so that I can tell</h5>
@@ -56,6 +87,15 @@
           <div class="boss-bar">
             <div class="boss-bar-line" id="hp-line"></div>
           </div>
+        </div>
+      </div>
+      <div class="victory-msg-container" id="victory-msg-container">
+        <div id="victory-msg" class="victory-msg">
+          <h2>You saved the farm!</h2>
+          <h3 id="clearTime">Your clear time is ${m}:${s}!</h3>
+          <img src="resources/images/FarmerCheerDrawing.png" class="farmerCheerDrawing">
+          <img src="resources/images/GoobbueDrawing.png" class="goobbueDrawing">
+          <button id="reloadGame" class="btn reload-btn active">Try Again?</button>
         </div>
       </div>
     </section>

@@ -32,6 +32,7 @@ body {
   position: relative;
   text-align: center;
   transition: all 2s ease-in-out;
+  background: url('../images/swirl_pattern.png');
 }
 
 .start-screen.moveUp {
@@ -48,19 +49,83 @@ body {
 .start-screen .synopsis {
   font-size: 20px;
   margin-bottom: 20px;
+  pointer-events: none;
+  user-select: none;
 }
 
 .difficulty-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 700px;
   flex-direction: column;
   text-align: center;
   font-size: 30px;
 }
 
-.input-containers {
+.diff-info-container {
+  overflow: hidden;
+  display: none;
+  position: absolute;
+  bottom: 20vh;
+  height: 150px;
+  width: 500px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  font-size: 26px;
+  opacity: 0;
+  transition: opacity 0.5s linear;
+}
+
+.diff-info-container.active {
+  display: block;
+  opacity: 1;
+}
+
+.diff-info-container ul {
+  list-style-type: none;
+}
+
+.easy-info,
+.normal-info,
+.hard-info {
+  color: #fff;
+  width: 100%;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  opacity: 0;
+  transition: opacity 0.5s linear;
+  user-select: none;
+  pointer-events: none;
+}
+
+.easy-info {
+  background-color: rgb(95, 194, 95);
+}
+
+.normal-info {
+  background-color: tomato;
+}
+
+.hard-info {
+  background-color: rgb(209, 63, 63);
+}
+
+.easy-info.show,
+.normal-info.show, 
+.hard-info.show {
+  display: block;
+  opacity: 1;
+}
+
+.inputs-container {
+  position: absolute;
   display: flex;
+  z-index: 100;
 }
 
 .input-container {
@@ -99,7 +164,7 @@ body {
 
 .startBtn {
   display: block;
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 10px 20px;
   font-size: 20px;
   border: 1px solid tomato;
@@ -130,7 +195,6 @@ body {
   user-select: none;
   pointer-events: none;
 }
-
 
 /* Game Screen Section */
 
@@ -175,7 +239,8 @@ body {
   margin: 0 10px;
 }
 
-.time, .score {
+.time,
+.score {
   position: absolute;
   top: 5vh;
 }
@@ -244,9 +309,10 @@ body {
   position: absolute;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-bottom: 15px solid rgba(240, 240, 240, 1);;
+  border-bottom: 15px solid rgba(240, 240, 240, 1);
+  ;
   transform: rotate(-90deg);
-  left: -22px; 
+  left: -22px;
   top: 50px;
   z-index: 100;
 }
@@ -291,23 +357,39 @@ body {
   transition: all 0.3s ease-out;
 }
 
-.goobbue img {
-  height: 125px;
-  width: 125px;
+.golden {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: -15vw;
+  user-select: none;
+  transform: translateX(0);
+  transition: transform 3s linear;
 }
 
-/* .goobue.hardMove {
-  animation: hardMovement 5s linear;
-} */
+.goobbue img,
+.golden img {
+  height: 125px;
+  width: 125px;
+  pointer-events: none;
+  user-select: none;
+}
 
 .goobbue.caught,
-.goobbue.disappear {
+.goobbue.disappear,
+.golden.caught {
   transform: scale(0);
 }
 
+.golden.show {
+  transform: translateX(130vw);
+}
+
 /* GOOBBUE BOSS */
-.boss-container{
-  position: relative;
+.boss-container {
+  position: absolute;
   margin: auto;
   width: 500px;
   height: 400px;
@@ -322,6 +404,15 @@ body {
 
 .boss-container.clicked {
   animation: shake 0.1s linear infinite;
+}
+
+.boss-top-container {
+  opacity: 1;
+  transition: all 1s linear;
+}
+
+.boss-top-container.disappear {
+  opacity: 0;
 }
 
 .goob-boss {
@@ -344,7 +435,8 @@ body {
   transition: opacity 1s 1s linear;
   z-index: 100;
   user-select: none;
-  pointer-events: none; /* Stops the numbers from preventing more clicks */
+  pointer-events: none;
+  /* Stops the numbers from preventing more clicks */
 }
 
 img.disappear {
@@ -381,40 +473,121 @@ img.disappear {
   width: 500px;
 }
 
+/* Victory Message */
+
+.victory-msg-container {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  visibility: none;
+  transition: all 0.3s linear;
+  opacity: 0;
+}
+
+.victory-msg-container.active {
+  display: flex;
+}
+
+.victory-msg-container.show {
+  opacity: 1;
+}
+
+.victory-msg {
+  position: relative;
+  text-align: center;
+  color: #fff;
+  background-color: skyblue;
+  padding: 20px 40px;
+  border-radius: 15px;
+}
+
+.victory-msg h2,
+.victory-msg h3,
+.victory-msg img {
+  user-select: none;
+  pointer-events: none;
+}
+
+.victory-msg .reload-btn {
+  top: 100px;
+}
+
+.farmerCheerDrawing,
+.goobbueDrawing {
+  position: absolute;
+}
+
+.farmerCheerDrawing {
+  left: -200px;
+  top: 0;
+  height: 300px;
+}
+
+.goobbueDrawing {
+  top: 100px;
+  right: -200px;
+  height: 200px;
+}
+
 /* Basic Background Stuff */
 
 .goob-runner {
   position: absolute;
-  z-index: -1;
-  animation: goobRun 5s infinite linear;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
-.goob-runner.runner1 {
-  top: 10vh;
-}
- 
-.goob-runner.runner2 {
-  bottom: 10vh;
-  transform: scaleX(-1);
-  animation: goobRun 7s reverse infinite linear;
-}
-
 @keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }
 
 @keyframes floatUpAndDisappear {
@@ -428,6 +601,7 @@ img.disappear {
   0% {
     transform: translateX(500%);
   }
+
   100% {
     transform: translateX(-500%);
   }
