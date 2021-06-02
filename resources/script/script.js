@@ -30,7 +30,7 @@ const reloadBtn = document.getElementById('reload')
 //Global Variables
 let goobbueCount = document.querySelectorAll('.goobbue').length
 let difficultyChosen = ''
-let score = 90
+let score = 0
 let seconds = 0
 let clearTime = 0
 let spawnSpeed = 0
