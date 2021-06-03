@@ -31,7 +31,7 @@ body {
 .start-screen {
   position: relative;
   text-align: center;
-  transition: all 2s ease-in-out;
+  transition: margin-top 2s ease-in-out;
   background: url('../images/swirl_pattern.png');
 }
 
